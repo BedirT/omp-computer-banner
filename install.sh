@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installer for omp-computer-banner — Codex-style overlay for OMP computer use.
+# Installer for omp-computer-banner. Codex-style overlay for OMP computer use.
 set -euo pipefail
 
 AGENT_DIR="${PI_CODING_AGENT_DIR:-$HOME/.omp/agent}"
@@ -36,7 +36,7 @@ if ! grep -q "omp-computer-banner\|Computer-use narration" "$AGENT_DIR/RULES.md"
 - Every `computer.*` eval call MUST set a short `title` naming the step, verb first (e.g. `title: "Clicking Save in Safari"`). Keep it under ~70 chars.
 - The banner extension reads that title and shows it live in the on-screen pill, so the user sees what you are doing as you do it.
 - Never write the pill status file yourself; the extension owns it.
-- Stopping a run: the user focuses the terminal and presses Esc (the on-screen pill is click-through and cannot receive keys, and signals must never be sent to the session — SIGINT kills it).
+- Stopping a run: the user focuses the terminal and presses Esc (the on-screen pill is click-through and cannot receive keys. Signals must never be sent to the session. SIGINT kills it).
 EOF
 fi
 

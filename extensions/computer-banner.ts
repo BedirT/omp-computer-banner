@@ -89,7 +89,7 @@ function spawnPill() {
       });
       return;
     } catch {
-      // missing binary here — try the next candidate path
+      // missing binary here. Try the next candidate path
     }
   }
 }
@@ -112,7 +112,7 @@ function flashScreen() {
  Bun.spawn([bin, "--flash", "--ppid", pid], { stdout: "ignore", stderr: "ignore", stdin: "ignore" });
  return;
  } catch {
- // missing binary here — try the next candidate path
+ // missing binary here. Try the next candidate path
  }
  }
 }
@@ -259,7 +259,7 @@ let hideTimer: Timer | undefined;
  show(ctx, fg, step);
  });
 
-  // NOTE: intentionally no hide on tool_result — one turn often runs several
+  // NOTE: intentionally no hide on tool_result. One turn often runs several
   // eval calls; hiding per call makes the banner flash and disappear.
  pi.on("tool_result", async (event, ctx) => {
  if (!isEvalResult(event)) return;
@@ -278,7 +278,7 @@ let hideTimer: Timer | undefined;
     handler: async (_args, ctx) => {
  await writeStatusFile("Previewing the banner…");
  show(ctx, "(manual test)", "Previewing the banner…");
- getUI(ctx)?.notify?.("Banner preview on — hides after idle.", "info");
+ getUI(ctx)?.notify?.("Banner preview on. Hides after idle.", "info");
     },
   });
 
