@@ -1,12 +1,17 @@
-# omp-computer-banner
+<h1 align="center">omp-computer-banner</h1>
 
-I use OMP computer use a lot. But when the agent takes over my Mac I had no idea what it was doing. Codex has a nice pill that tells you. So I had one built for OMP.
+<p align="center">
+<img src="https://img.shields.io/badge/macOS-14%2B-black?logo=apple&logoColor=white" alt="macOS 14 plus" />
+<img src="https://img.shields.io/badge/Swift-5-orange?logo=swift&logoColor=white" alt="Swift 5" />
+<img src="https://img.shields.io/badge/OMP-extension-blue" alt="OMP extension" />
+<img src="https://img.shields.io/badge/License-MIT-green" alt="License MIT" />
+</p>
 
-![Pill with live step text](assets/pill.png)
-
-![Full screen with breathing purple edge glow](assets/glow.png)
+<p align="center">I use OMP computer use a lot. But when the agent takes over my Mac I had no idea what it was doing. Codex has a nice pill that tells you. So I had one built for OMP.</p>
 
 ![Demo: live step text, breathing glow, Done beat](assets/demo.gif)
+
+![Pill with live step text](assets/pill.png)
 
 What you get:
 
