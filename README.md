@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/License-MIT-green" alt="License MIT" />
 </p>
 
-<p align="center">I use OMP computer use a lot. But when the agent takes over my Mac I had no idea what it was doing. Codex has a nice pill that tells you. So I had one built for OMP.</p>
+<p align="center">I use OMP computer use a lot. But when the agent takes over my Mac I had no idea what it was doing. Codex shows a small status note while it works. So I had one built for OMP. Directed and architected by me, coded by my agents.</p>
 
 ![Demo: live step text, breathing glow, Done beat](assets/demo.gif)
 
@@ -21,12 +21,6 @@ What you get:
 - When it is done the pill says Done and fades out. It never steals your focus.
 
 The shots above are staged on a fake backdrop. The real thing hides from screenshots on purpose, so I had to fake the scene to show it.
-
-## How this repo was made
-
-I want to be honest here. I directed and engineered all of this. Every behavior was my call. I tested each step live on my screen and tuned it until it felt right. But I did not write the code and I never read it line by line. An NAI coding agent wrote all of it.
-
-So this is not vibe code nobody looked at. I watched everything it does. I just did not read the source.
 
 ## Install
 
