@@ -6,7 +6,7 @@ I use OMP computer use a lot. But when the agent takes over my Mac I had no idea
 
 ![Full screen with breathing purple edge glow](assets/glow.png)
 
-![Goodbye beat](assets/done.png)
+![Demo: live step text, breathing glow, Done beat](assets/demo.gif)
 
 What you get:
 

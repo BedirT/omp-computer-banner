@@ -290,7 +290,9 @@ if !noGlow {
  let fade = min(1.0, Date().timeIntervalSince(born) / 1.0)
  let out = goodbyeFrom.map { min(1.0, Date().timeIntervalSince($0) / 0.7) } ?? 0
  // --stage freezes the breath at its mean so README shots are deterministic.
- let breath = CommandLine.arguments.contains("--stage") ? 0.65 : (0.45 + 0.40 * (0.5 - 0.5 * cos(phase)))
+ // --live-breath overrides the freeze for screen recordings.
+ let frozen = CommandLine.arguments.contains("--stage") && !CommandLine.arguments.contains("--live-breath")
+ let breath = frozen ? 0.65 : (0.45 + 0.40 * (0.5 - 0.5 * cos(phase)))
  glow.alphaValue = breath * fade * (1 - out)
  }
 }
