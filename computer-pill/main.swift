@@ -58,7 +58,8 @@ final class GlowView: NSView {
  let clear = NSColor(red: 0.62, green: 0.36, blue: 1.0, alpha: 0.0)
  let depth: CGFloat = 110
  func wash(_ rect: NSRect, angle: CGFloat) {
- NSGradient(starting: edge, ending: clear)?.draw(in: rect, angle: angle)
+ let stops: [(CGFloat, CGFloat)] = [(0.0, 0.55), (0.2, 0.49), (0.4, 0.36), (0.6, 0.19), (0.8, 0.06), (0.9, 0.015), (1.0, 0.0)]
+ NSGradient(colors: stops.map { edge.withAlphaComponent($0.1) }, atLocations: stops.map { $0.0 }, colorSpace: .deviceRGB)?.draw(in: rect, angle: angle)
  }
  override func draw(_ dirtyRect: NSRect) {
  let w = bounds.width, h = bounds.height, d = depth
@@ -66,15 +67,6 @@ final class GlowView: NSView {
  wash(NSRect(x: 0, y: 0, width: w, height: d), angle: 90)
  wash(NSRect(x: 0, y: 0, width: d, height: h), angle: 0)
  wash(NSRect(x: w - d, y: 0, width: d, height: h), angle: 180)
- let corners: [NSPoint] = [
- NSPoint(x: 0, y: 0), NSPoint(x: w, y: 0),
- NSPoint(x: 0, y: h), NSPoint(x: w, y: h),
- ]
- for c in corners {
- NSGradient(starting: edge, ending: clear)?.draw(
- fromCenter: c, radius: 0, toCenter: c, radius: d * 1.4,
- options: [.drawsAfterEndingLocation])
- }
  }
 }
 
@@ -195,6 +187,57 @@ func layout() {
   label.frame = NSRect(x: labelX, y: (pillH - th) / 2, width: pillW - labelX - margin, height: th)
 }
 
+// --stage: README staging only. Full-bleed gradient backdrop drawn by the
+// binary itself, so shots have no foreign windows, seams, or personal data.
+final class BackdropView: NSView {
+ override func draw(_ dirtyRect: NSRect) {
+ let top = NSColor(red: 0.17, green: 0.17, blue: 0.28, alpha: 1.0)
+ let bottom = NSColor(red: 0.25, green: 0.22, blue: 0.36, alpha: 1.0)
+ NSGradient(starting: top, ending: bottom)?.draw(in: bounds, angle: 270)
+ // soft wallpaper-like color fields, so the glow reads as ambient light
+ let w = bounds.width, h = bounds.height
+ func blob(_ cx: CGFloat, _ cy: CGFloat, _ r: CGFloat, _ c: NSColor) {
+ NSGradient(starting: c, ending: c.withAlphaComponent(0))?.draw(
+ fromCenter: NSPoint(x: cx, y: cy), radius: 0,
+ toCenter: NSPoint(x: cx, y: cy), radius: r,
+ options: [.drawsAfterEndingLocation])
+ }
+ blob(w * 0.18, h * 0.72, w * 0.45, NSColor(red: 0.35, green: 0.42, blue: 0.9, alpha: 0.12))
+ blob(w * 0.85, h * 0.25, w * 0.5, NSColor(red: 0.2, green: 0.7, blue: 0.75, alpha: 0.07))
+ // faint deterministic grain: breaks Mach bands on flat fields, like real
+ // desktop texture does, so the shot reads the way the glow looks live
+ var seed: UInt64 = 0x9E3779B97F4A7C15
+ let dots = Int(bounds.width * bounds.height / 700)
+ var i = 0
+ while i < dots {
+ seed = seed &* 6364136223846793005 &+ 1442695040888963407
+ let x = CGFloat((seed >> 33) % UInt64(max(1, Int(bounds.width))))
+ seed = seed &* 6364136223846793005 &+ 1442695040888963407
+ let y = CGFloat((seed >> 33) % UInt64(max(1, Int(bounds.height))))
+ ((i & 1) == 0 ? NSColor.white : NSColor.black).withAlphaComponent(0.03).setFill()
+ NSRect(x: x, y: y, width: 1, height: 1).fill()
+ i += 1
+ }
+ }
+}
+if CommandLine.arguments.contains("--stage") {
+ let back = NSPanel(
+ contentRect: screen.frame,
+ styleMask: [.borderless, .nonactivatingPanel],
+ backing: .buffered,
+ defer: false
+ )
+ back.level = .screenSaver
+ back.collectionBehavior = [.canJoinAllSpaces, .stationary, .fullScreenAuxiliary]
+ back.isOpaque = false
+ back.backgroundColor = .clear
+ back.hasShadow = false
+ back.ignoresMouseEvents = true
+ back.hidesOnDeactivate = false
+ back.sharingType = sharing
+ back.contentView = BackdropView(frame: NSRect(origin: .zero, size: screen.frame.size))
+ back.orderFrontRegardless()
+}
 readStatus()
 statusChanged = false
 layout()
@@ -246,7 +289,9 @@ if !noGlow {
  phase += (1.0 / 30.0) * 2.0 * .pi / 3.0
  let fade = min(1.0, Date().timeIntervalSince(born) / 1.0)
  let out = goodbyeFrom.map { min(1.0, Date().timeIntervalSince($0) / 0.7) } ?? 0
- glow.alphaValue = (0.45 + 0.40 * (0.5 - 0.5 * cos(phase))) * fade * (1 - out)
+ // --stage freezes the breath at its mean so README shots are deterministic.
+ let breath = CommandLine.arguments.contains("--stage") ? 0.65 : (0.45 + 0.40 * (0.5 - 0.5 * cos(phase)))
+ glow.alphaValue = breath * fade * (1 - out)
  }
 }
 
